@@ -285,7 +285,7 @@ class EventHandler:
             f"File  | {self.file_handler.selected}",
             f"Grid  | {self.conway.board.shape[0]} x {self.conway.board.shape[1]}",
             *(f'{identifier} -> {self.event.storage.get(identifier, {})}' for identifier in self.event.registered.keys()),
-            position=(10, 10), size=18
+            position=(10, 10)
         )
 
     def __info(self) -> None:
@@ -299,5 +299,5 @@ class EventHandler:
             f"Alive | {len(self.conway.board.alive_positions)} (Gen #{self.conway.generation})",
             f"File  | {self.file_handler.selected}",
             f" >>> {'Running' if self.event.registered.get('game') else 'Paused'}",
-            position=(10, 10), size=18
+            position=(10, 10)
         )

@@ -55,7 +55,9 @@ config = ConfigNamespace({
         # str: Path to a font (.ttf).
         "path": "./fonts/JetBrainsMono-Bold.ttf",
         # str: Default colour of the font ("#RGBA" or "#RGB").
-        "colour": "#FFFFFF"
+        "colour": "#FFFFFF",
+        # int: the font size
+        "size": 18
     },
     "keybinds": {
         # Keybinds to interact with the game, see: https://www.pygame.org/docs/ref/key.html for an exhaustive list.

@@ -16,6 +16,7 @@ class Painter:
         self.screen = screen
         self.sprites = Sprite.render_sprites()
         self.grid_size = config.display.grid_size
+        self.__font = pygame.font.Font(config.font.path, config.font.size)
         self.__scale = 1.0
         self.__cache = {}
 
@@ -86,17 +87,16 @@ class Painter:
         self.screen.fill(pygame.Color(config.sprite.background.void))
         self.__draw("background", (0, 0))
 
-    def label(self, *labels: str, position: tuple[int, int], size: int = 8, colour: str = config.font.colour) -> None:
+    def label(self, *labels: str, position: tuple[int, int], colour: str = config.font.colour) -> None:
         """Renders labels onto the screen. If multiple lables, A multiline left-justified label is drawn.
 
         Args:
+            labels (str): labels to render.
             position (tuple[int, int]): The px position to render the label(s) at.
-            size (int, optional): Font size of the label. Defaults to 8.
             colour (str, optional): Colour of the label. Defaults to config.font.colour.
         """
-        font = pygame.font.Font(config.font.path, size)
         for (offset, label) in enumerate(labels):
-            self.screen.blit(font.render(label, True, colour), (position[0], position[1] + font.get_height() * offset))
+            self.screen.blit(self.__font.render(label, True, colour), (position[0], position[1] + self.__font.get_height() * offset))
 
     def __draw(self, identifier: str, position: tuple[int, int]) -> None:
         """Internal renderer/drawer function to blit sprites onto the screen. Also handles scaling and caching of each surface.
