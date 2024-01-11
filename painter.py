@@ -68,7 +68,7 @@ class Painter:
             positions (Iterable[tuple[int, int]]): The px positions to render the highlight at.
         """
         for position in positions:
-            position = position[0] // self.grid_size, position[1] // self.grid_size
+            position = position[0] // self.grid_size * self.grid_size, position[1] // self.grid_size * self.grid_size
             self.__draw("cell_highlighted", position)
 
     def cells_alive(self, board: Board) -> None:
