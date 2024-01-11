@@ -53,11 +53,11 @@ class Painter:
         """
         for position in board.alive_positions:
             for position in board.neighbours(position):
-                position = [ax * self.grid_size for ax in position]
+                position = position[0] * self.grid_size, position[1] * self.grid_size
                 self.__draw("cell_debug_neighbour", position)
 
         for position, cell in board:
-            position = [ax * self.grid_size for ax in position]
+            position = position[0] * self.grid_size, position[1] * self.grid_size
             if cell.alive:
                 self.__draw("cell_debug", position)
 
@@ -68,7 +68,7 @@ class Painter:
             positions (Iterable[tuple[int, int]]): The px positions to render the highlight at.
         """
         for position in positions:
-            position = [ax // self.grid_size * self.grid_size for ax in position]
+            position = position[0] // self.grid_size, position[1] // self.grid_size
             self.__draw("cell_highlighted", position)
 
     def cells_alive(self, board: Board) -> None:
@@ -78,7 +78,7 @@ class Painter:
             board (Board): The current board instance from the Conway class.
         """
         for position in board.alive_positions:
-            position = [ax * self.grid_size for ax in position]
+            position = position[0] * self.grid_size, position[1] * self.grid_size
             self.__draw("cell", position)
 
     def background(self) -> None:
@@ -111,8 +111,8 @@ class Painter:
             surface = pygame.transform.scale(surface, (surface.get_width() * self.scale, surface.get_height() * self.scale))
             self.__cache[identifier] = surface
 
-        anchor = pygame.mouse.get_pos()
         # translate the position by scaling the distance from the surface to the anchor's position, then adding the anchor's position back
-        position = [(ax - anch) * self.scale + anch for ax, anch in zip(position, anchor)]
+        anchor = pygame.mouse.get_pos()
+        position = int((position[0] - anchor[0]) * self.scale + anchor[0]), int((position[1] - anchor[1]) * self.scale + anchor[1])
 
         self.screen.blit(surface, position)

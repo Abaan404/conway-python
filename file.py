@@ -30,7 +30,7 @@ class FileHandler:
         self.__files.rotate(direction)
         self.selected = self.__files[0]
 
-    def __decode_rle(self) -> Generator[tuple[int, int], None, None]:
+    def __decode_rle(self) -> Generator[tuple[int, int] | tuple[()], None, None]:
         """Decode a Life file encoded using RLE. Spec provided by https://conwaylife.com/wiki/Run_Length_Encoded.
 
         Yields:
@@ -40,7 +40,7 @@ class FileHandler:
             stream = list(filter(lambda line: not line.startswith("#"), f.readlines()))
             meta = stream.pop(0).split(", ")
             # potential for load efficiency using width and height. TODO (perhaps unnecessary since positions are cached on load)
-            width, height, rule = int(meta[0][4:]), int(meta[1][4:]), str(meta[2][7:-1])
+            _, _, rule = int(meta[0][4:]), int(meta[1][4:]), str(meta[2][7:-1])
             stream = ''.join(stream).replace('\n', "")
 
         # ensure Life file is of the correct format
@@ -93,6 +93,9 @@ class FileHandler:
 
         elif self.selected.endswith(".rle"):
             pattern = list(self.__decode_rle())
+
+        else:
+            pattern = list()
 
         self.__cache[self.selected] = pattern
         return positions

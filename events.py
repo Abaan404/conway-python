@@ -57,7 +57,7 @@ class Event:
         Returns:
             dict: The storage of the event.
         """
-        return self.storage.get(identifier)
+        return self.storage.get(identifier, {})
 
     def __delitem__(self, identifier: str) -> None:
         """Remove an event's storage.
@@ -111,7 +111,7 @@ class EventHandler:
             else:
                 func()
 
-    def video_resize_event(self, event: pygame.event) -> None:
+    def video_resize_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.VIDEORESIZE event.
 
         Args:
@@ -121,7 +121,7 @@ class EventHandler:
         self.painter.reload()
         self.conway.board.resize()
 
-    def mouse_down_event(self, event: pygame.event) -> None:
+    def mouse_down_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.MOUSEBUTTONDOWN event.
 
         Args:
@@ -130,7 +130,7 @@ class EventHandler:
         if event.button == pygame.BUTTON_LEFT:
             self.__apply_grace("draw", self.__toggle_cell_event, step_seconds=-1)
 
-    def mouse_up_event(self, event: pygame.event) -> None:
+    def mouse_up_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.MOUSEBUTTONUP event.
 
         Args:
@@ -139,7 +139,7 @@ class EventHandler:
         if event.button == pygame.BUTTON_LEFT:
             self.event.release("draw")
 
-    def mouse_scroll_event(self, event: pygame.event) -> None:
+    def mouse_scroll_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.MOUSEWHEEL event.
 
         Args:
@@ -150,7 +150,7 @@ class EventHandler:
         elif event.y < 0:
             self.painter.scale -= config.zoom.step
 
-    def mouse_motion_event(self, event: pygame.event) -> None:
+    def mouse_motion_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.MOUSEMOTION event.
 
         Args:
@@ -158,7 +158,7 @@ class EventHandler:
         """
         self.event["highlight"] = {"position": event.pos}
 
-    def keyboard_keydown_event(self, event: pygame.event) -> None:
+    def keyboard_keydown_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.KEYDOWN event.
 
         Args:
@@ -204,7 +204,7 @@ class EventHandler:
         elif event.key == self.keybinds.cycle_prev:
             self.file_handler.rotate(-1)
 
-    def keyboard_keyup_event(self, event: pygame.event) -> None:
+    def keyboard_keyup_event(self, event: pygame.event.Event) -> None:
         """The handler for pygame.KEYUP event.
 
         Args:
@@ -255,7 +255,7 @@ class EventHandler:
         self.event["highlight"] = {"position": position}
 
         if not self.event["highlight_grace"]:  # setup condition
-            self.event.register("highlight", self.painter.cells_highlight, lambda: self.file_handler.offset_px_position(*self.event["highlight"]["position"], self.conway.board.grid_size))
+            self.event.register("highlight", self.painter.cells_highlight, lambda: self.file_handler.offset_px_position(*self.event["highlight"]["position"], self.conway.board.grid_size)) # pyright: ignore reportGeneralTypeIssues if i unpack it a step earlier it breaks?
 
     def __toggle_cell_event(self) -> None:
         """Internal helper function to interface with the internal Conway.Board.toggle function on user input.

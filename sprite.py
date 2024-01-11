@@ -24,7 +24,7 @@ class Sprite:
         Returns:
             pygame.Surface: The pygame.Surface object of the drawn sprite.
         """
-        return pygame.image.fromstring(self.image.tobytes(), self.image.size, self.image.mode).convert_alpha()
+        return pygame.image.fromstring(self.image.tobytes(), self.image.size, "RGBA").convert_alpha()
 
     @staticmethod
     def render_sprites() -> dict[str, pygame.Surface]:
@@ -52,7 +52,7 @@ class Sprite:
                 length=config.display.grid_size,
                 cell_fill=config.sprite.cell.debug_neighbour_colour).render(),
             "icon": Icon(
-                width=256, # maximum allowed width for icons by Win32 apps.
+                size=256, # maximum allowed width for icons by Win32 apps.
                 sq_fill=config.sprite.icon.colours,
                 squares=config.sprite.icon.squares).render()
         }
@@ -89,6 +89,8 @@ class Background(Sprite):
         elif orientation == "vertical":
             x, y = offset, 0
             x_end, y_end = offset, self.image.height
+        else:
+            return
 
         line = ((x, y), (x_end, y_end))
         self.draw.line(line, width=1, fill=self.lin_fill)
@@ -106,7 +108,7 @@ class Cell(Sprite):
 
 
 class Icon(Sprite):
-    def __init__(self, width: tuple[int, int], sq_fill: list[str], squares: int) -> None:
+    def __init__(self, size: int, sq_fill: list[str], squares: int) -> None:
         """The icon sprite for the game. Draws an icon for the game.
 
         Args:
@@ -114,10 +116,10 @@ class Icon(Sprite):
             sq_fill (list[str]): A list of randomly selected fill colour for each drawn square.
             squares (int): The length of the number of squares to be drawn.
         """
-        super().__init__((width, width), fill="#00000000")
-        padding = width // (squares * 4)
-        sq_width = (width - padding * (squares + 1)) // squares
+        super().__init__((size, size), fill="#00000000")
+        padding = size // (squares * 4)
+        sq_width = (size - padding * (squares + 1)) // squares
 
-        for i in range(padding, width - padding, sq_width + padding):
-            for j in range(padding, width - padding, sq_width + padding):
+        for i in range(padding, size - padding, sq_width + padding):
+            for j in range(padding, size - padding, sq_width + padding):
                 self.draw.rounded_rectangle(xy=(i, j, i + sq_width, j + sq_width), radius=sq_width * 0.3, fill=random.choice(sq_fill))
